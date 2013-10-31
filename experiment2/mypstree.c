@@ -3,11 +3,57 @@
 #include <dirent.h>
 #include <string.h>
 #include <assert.h>
+
+typedef struct dirstruct Dirstruct;
 struct dirstruct {
 	int pid;
-	struct distruct *next;
-	struct distruct *child;
+	char* name;
+	Dirstruct *next;
+	Dirstruct *child;
 };
+
+Dirstruct *head;
+
+int hasChild(Dirstruct *current) {
+	return (current->child!=NULL);
+}
+Dirstruct* getChild(Dirstruct *current) {
+	return current->child;
+}
+int hasNext(Dirstruct *current) {
+	return (current->next!=NULL);
+}
+Dirstruct* getNext(Dirstruct *current) {
+	return current->next;
+}
+void insertNeighbour(Dirstruct *current, Dirstruct *root) {
+	assert(root!=NULL && current!=NULL);
+	current->next = root->next;
+	root->next = current;
+}
+void insertChild(Dirstruct *current, Dirstrut *parent) {
+	assert(parent!=NULL && current != NULL);
+	current->next = parent->child;
+	parent->child = current;
+}
+
+
+Dirstruct* searchByPid(Dirstruct *current, int pid) {
+	Dirstruct* temp= NULL;
+	Dirstruct* temp_result = NULL;
+	if (current->pid == pid) return current;	
+	else if (!hasChild(current)) return NULL;
+	else {
+		for (temp = getChild(current);temp_result==NULL;temp=temp->next) {
+			temp_result = searchByPid(temp,pid);	
+		}
+		return temp_result;
+	}
+	/* should never reach */
+	assert(1==2);
+}
+
+/* filter the directory that only named with digits  */
 int filterdir(const struct dirent* dirstruct) {
 	char *p;
 	strtol(dirstruct->d_name, &p, 10);
@@ -20,7 +66,8 @@ void analysefile(char* dirname) {
 	char statuspath[80];
 	int pid = 0;
 	int ppid = 0;
-	char *line;
+	char *line = NULL;
+	char *name = malloc(100);
 	size_t len = 0;
 	ssize_t read;
 	strcpy (statuspath, "/proc/");
@@ -28,17 +75,32 @@ void analysefile(char* dirname) {
 	strcat (statuspath, "/status");
 	FILE *statusfile = fopen(statuspath,"r");
 	assert(statusfile!=NULL);
-	while ((read = getline(&line, 0, statusfile)) != -1) {
+	while ((read = getline(&line, &len, statusfile)) != -1) {
 		sscanf(line, "Pid:\t%d", &pid);
 		sscanf(line, "PPid:\t%d", &ppid);
+		sscanf(line, "Name:\t%s", name);
 	}
 	assert(pid != 0);
-	assert(ppid != 0);
-	printf("%d\t%d",pid,ppid);
+	printf("%d\t%d\t%s\n",pid,ppid,name);
+	free(line);
 	fclose(statusfile);
 
+	if (searchByPid(head, pid) != NULL) {
+		
+	}
+	else {
+		Dirstruct *dirnode = (Dirstruct*)malloc(sizeof(Dirstruct));
+
+	}
+	
 }
 int main(){
+	/* Head init */
+	head = (Dirstruct*)malloc(sizeof(Dirstruct));
+	head->pid=0;
+	head->name="never appeared";
+	head->next=NULL;
+	head->child=NULL;
 	char* procdir = "/proc";
 	struct dirent **namelist;
 	int n = 0;
