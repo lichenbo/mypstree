@@ -14,6 +14,9 @@ struct dirstruct {
 
 Dirstruct *head;
 
+Dirstruct* searchByPid(Dirstruct *current, int pid);
+void printNode(Dirstruct*);
+
 int hasChild(Dirstruct *current) {
 	return (current->child!=NULL);
 }
@@ -31,7 +34,7 @@ void insertNeighbour(Dirstruct *current, Dirstruct *root) {
 	current->next = root->next;
 	root->next = current;
 }
-void insertChild(Dirstruct *current, Dirstrut *parent) {
+void insertChild(Dirstruct *current, Dirstruct *parent) {
 	assert(parent!=NULL && current != NULL);
 	current->next = parent->child;
 	parent->child = current;
@@ -39,7 +42,7 @@ void insertChild(Dirstruct *current, Dirstrut *parent) {
 void insertChildByPPid(Dirstruct *current, int ppid) {
 	Dirstruct *parent = searchByPid(head, ppid);
 	if (parent == NULL) {
-		parent = (Dirstruct*)malloc(sizeof(Dirstrcut));
+		parent = (Dirstruct*)malloc(sizeof(Dirstruct));
 		parent->pid = ppid;
 		insertChild(parent, head);
 		insertChild(current, parent);
@@ -51,8 +54,9 @@ void insertChildByPPid(Dirstruct *current, int ppid) {
 }
 void removeHeadLink(Dirstruct *current) {
 	assert(hasChild(head));
+	Dirstruct *temp;
 	Dirstruct *temp_before = head;
-	for (Dirstruct *temp = head->child;;temp = getNext(temp)) {
+	for (temp = head->child;;temp = getNext(temp)) {
 		if (temp == current) {
 			if (temp_before == head) {
 				temp_before->child = temp->next;
@@ -60,6 +64,7 @@ void removeHeadLink(Dirstruct *current) {
 			else {
 				temp_before->next = temp->next;
 			}
+			return;
 		}
 		temp_before = temp;
 	}
@@ -130,6 +135,18 @@ void analysefile(char* dirname) {
 	}
 	
 }
+void printList() {
+	assert((head->child)!=NULL);
+	printNode(head->child);
+}
+void printNode(Dirstruct* node) {
+	printf("%d\t%s\n",node->pid,node->name);
+	if (hasChild(node)) 
+		printNode(node->child);
+	if (hasNext(node))
+		printNode(node->next);
+	return;
+}
 int main(){
 	/* Head init */
 	head = (Dirstruct*)malloc(sizeof(Dirstruct));
@@ -150,5 +167,6 @@ int main(){
 		}
 		free(namelist);
 	}
+	printList();
 	return 0;
 }
