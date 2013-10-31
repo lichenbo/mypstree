@@ -20,13 +20,17 @@ void analysefile(char* dirname) {
 	char statuspath[80];
 	int pid = 0;
 	int ppid = 0;
+	char *line;
+	size_t len = 0;
+	ssize_t read;
 	strcpy (statuspath, "/proc/");
 	strcat (statuspath, dirname);
 	strcat (statuspath, "/status");
 	FILE *statusfile = fopen(statuspath,"r");
-	while (!feof(statusfile)) {
-		fscanf(statusfile, "Pid:\t%d", &pid);
-		fscanf(statusfile, "PPid:\t%d", &ppid);
+	assert(statusfile!=NULL);
+	while ((read = getline(&line, 0, statusfile)) != -1) {
+		sscanf(line, "Pid:\t%d", &pid);
+		sscanf(line, "PPid:\t%d", &ppid);
 	}
 	assert(pid != 0);
 	assert(ppid != 0);
