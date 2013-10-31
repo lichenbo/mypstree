@@ -36,6 +36,34 @@ void insertChild(Dirstruct *current, Dirstrut *parent) {
 	current->next = parent->child;
 	parent->child = current;
 }
+void insertChildByPPid(Dirstruct *current, int ppid) {
+	Dirstruct *parent = searchByPid(head, ppid);
+	if (parent == NULL) {
+		parent = (Dirstruct*)malloc(sizeof(Dirstrcut));
+		parent->pid = ppid;
+		insertChild(parent, head);
+		insertChild(current, parent);
+	}
+	else {
+		assert(ppid == parent->pid);
+		insertChild(current,parent);
+	}
+}
+void removeHeadLink(Dirstruct *current) {
+	assert(hasChild(head));
+	Dirstruct *temp_before = head;
+	for (Dirstruct *temp = head->child;;temp = getNext(temp)) {
+		if (temp == current) {
+			if (temp_before == head) {
+				temp_before->child = temp->next;
+			}
+			else {
+				temp_before->next = temp->next;
+			}
+		}
+		temp_before = temp;
+	}
+}
 
 
 Dirstruct* searchByPid(Dirstruct *current, int pid) {
@@ -85,12 +113,20 @@ void analysefile(char* dirname) {
 	free(line);
 	fclose(statusfile);
 
+	Dirstruct *dirnode = searchByPid(head, pid);
 	if (searchByPid(head, pid) != NULL) {
+		dirnode->name = name;
+		removeHeadLink(dirnode);
+		insertChildByPPid(dirnode, ppid);
 		
 	}
 	else {
-		Dirstruct *dirnode = (Dirstruct*)malloc(sizeof(Dirstruct));
-
+		dirnode = (Dirstruct*)malloc(sizeof(Dirstruct));
+		dirnode->pid = pid;
+		dirnode->name = name;
+		dirnode->next = NULL;
+		dirnode->child = NULL;
+		insertChildByPPid(dirnode, ppid);
 	}
 	
 }
