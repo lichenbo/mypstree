@@ -70,8 +70,6 @@ Dirstruct* searchByPid(Dirstruct *current, int pid) {
 				return NULL;
 			}
 			printf("%d\t",temp->pid);
-			getchar();
-			printf("recursion begin");
 			temp_result = searchByPid(temp,pid);	
 		}
 		return temp_result;

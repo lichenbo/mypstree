@@ -102,6 +102,15 @@ START_TEST (testSearchByPid1)
 	ck_assert(searchByPid(&temp1, 25) == NULL);
 }
 END_TEST
+
+START_TEST (testSearchByPid2)
+{
+
+
+
+
+}
+END_TEST
 Suite* mypstree_suite(void)
 {
 	Suite* s = suite_create("Mypstree");
