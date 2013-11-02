@@ -1,21 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <string.h>
-#include <assert.h>
-
-typedef struct dirstruct Dirstruct;
-struct dirstruct {
-	int pid;
-	char* name;
-	Dirstruct *next;
-	Dirstruct *child;
-};
-
-Dirstruct *head;
-
-Dirstruct* searchByPid(Dirstruct *current, int pid);
-void printNode(Dirstruct*);
+#include "mypstree.h"
 
 int hasChild(Dirstruct *current) {
 	return (current->child!=NULL);
@@ -146,27 +129,4 @@ void printNode(Dirstruct* node) {
 	if (hasNext(node))
 		printNode(node->next);
 	return;
-}
-int main(){
-	/* Head init */
-	head = (Dirstruct*)malloc(sizeof(Dirstruct));
-	head->pid=0;
-	head->name="never appeared";
-	head->next=NULL;
-	head->child=NULL;
-	char* procdir = "/proc";
-	struct dirent **namelist;
-	int n = 0;
-	n = scandir(procdir,&namelist,filterdir,alphasort);
-	if (n < 0)
-		printf("scandir");
-	else {
-		while (n--) {
-			analysefile(namelist[n]->d_name);
-			free(namelist[n]);
-		}
-		free(namelist);
-	}
-	printList();
-	return 0;
 }

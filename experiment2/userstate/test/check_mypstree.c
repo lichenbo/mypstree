@@ -2,4 +2,7 @@
 #include <check.h>
 #include "../src/mypstree.c"
 
-START_TEST (test
+START_TEST (test)
+{
+}
+END_TEST
