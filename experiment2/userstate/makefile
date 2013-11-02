@@ -1,3 +1,4 @@
+# makefile written by lichenbo (111250075)
 CC = gcc
 CFLAGS = -Wall -g
 
@@ -13,6 +14,9 @@ $(OUT): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
 	$(CC) -c $< -o $@ $(CFLAGS)
+test: test/test
+test/test: test/check_mypstree.c $(DEPS) $(SDIR)/mypstree.c
+	$(CC) $< $(SDIR)/mypstree.c -o $@ -lcheck
 
 .PHONY: clean
 
@@ -21,3 +25,6 @@ clean:
 
 run:
 	bin/main
+
+runtest:
+	test/test

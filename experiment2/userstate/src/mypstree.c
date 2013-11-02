@@ -4,12 +4,14 @@ int hasChild(Dirstruct *current) {
 	return (current->child!=NULL);
 }
 Dirstruct* getChild(Dirstruct *current) {
+	assert(hasChild(current));
 	return current->child;
 }
 int hasNext(Dirstruct *current) {
 	return (current->next!=NULL);
 }
 Dirstruct* getNext(Dirstruct *current) {
+	assert(hasNext(current));
 	return current->next;
 }
 void insertNeighbour(Dirstruct *current, Dirstruct *root) {
@@ -24,6 +26,7 @@ void insertChild(Dirstruct *current, Dirstruct *parent) {
 }
 void insertChildByPPid(Dirstruct *current, int ppid) {
 	Dirstruct *parent = searchByPid(head, ppid);
+	printf("parrentAddress:%p\n",parent);
 	if (parent == NULL) {
 		parent = (Dirstruct*)malloc(sizeof(Dirstruct));
 		parent->pid = ppid;
@@ -34,6 +37,7 @@ void insertChildByPPid(Dirstruct *current, int ppid) {
 		assert(ppid == parent->pid);
 		insertChild(current,parent);
 	}
+	assert(parent->child == current);
 }
 void removeHeadLink(Dirstruct *current) {
 	assert(hasChild(head));
@@ -57,10 +61,17 @@ void removeHeadLink(Dirstruct *current) {
 Dirstruct* searchByPid(Dirstruct *current, int pid) {
 	Dirstruct* temp= NULL;
 	Dirstruct* temp_result = NULL;
+	assert(current != NULL);
 	if (current->pid == pid) return current;	
 	else if (!hasChild(current)) return NULL;
 	else {
 		for (temp = getChild(current);temp_result==NULL;temp=temp->next) {
+			if (temp == NULL) {
+				return NULL;
+			}
+			printf("%d\t",temp->pid);
+			getchar();
+			printf("recursion begin");
 			temp_result = searchByPid(temp,pid);	
 		}
 		return temp_result;
@@ -102,11 +113,10 @@ void analysefile(char* dirname) {
 	fclose(statusfile);
 
 	Dirstruct *dirnode = searchByPid(head, pid);
-	if (searchByPid(head, pid) != NULL) {
+	if (dirnode != NULL) {
 		dirnode->name = name;
 		removeHeadLink(dirnode);
 		insertChildByPPid(dirnode, ppid);
-		
 	}
 	else {
 		dirnode = (Dirstruct*)malloc(sizeof(Dirstruct));
@@ -116,7 +126,6 @@ void analysefile(char* dirname) {
 		dirnode->child = NULL;
 		insertChildByPPid(dirnode, ppid);
 	}
-	
 }
 void printList() {
 	assert((head->child)!=NULL);
