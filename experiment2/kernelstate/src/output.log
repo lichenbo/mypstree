@@ -1,0 +1,8 @@
+make -C /usr/src/linux-headers-3.11.0-12 M=/home/lichenbo/Documents/linux/experiment2/kernelstate/src modules
+make[1]: Entering directory `/usr/src/linux-headers-3.11.0-12'
+
+  WARNING: Symbol version dump /usr/src/linux-headers-3.11.0-12/Module.symvers
+           is missing; modules will have no dependencies and modversions.
+
+  CC [M]  /home/lichenbo/Documents/linux/experiment2/kernelstate/src/helloworld.o
+make[1]: Leaving directory `/usr/src/linux-headers-3.11.0-12'

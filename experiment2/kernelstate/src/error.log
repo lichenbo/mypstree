@@ -1,0 +1,12 @@
+In file included from include/linux/mmzone.h:18:0,
+                 from include/linux/gfp.h:4,
+                 from include/linux/kmod.h:22,
+                 from include/linux/module.h:13,
+                 from /home/lichenbo/Documents/linux/experiment2/kernelstate/src/helloworld.c:2:
+include/linux/page-flags-layout.h:5:30: fatal error: generated/bounds.h: No such file or directory
+ #include <generated/bounds.h>
+                              ^
+compilation terminated.
+make[2]: *** [/home/lichenbo/Documents/linux/experiment2/kernelstate/src/helloworld.o] Error 1
+make[1]: *** [_module_/home/lichenbo/Documents/linux/experiment2/kernelstate/src] Error 2
+make: *** [default] Error 2
