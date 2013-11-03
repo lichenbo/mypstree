@@ -1,0 +1,6 @@
+Created By 111250075 lichenbo
+
+make -> compile the src
+make run -> execute the binary
+make test -> compile the test case
+make runtest -> run unit test

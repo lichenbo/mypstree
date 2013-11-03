@@ -30,6 +30,8 @@ void insertChildByPPid(Dirstruct *current, int ppid) {
 	if (parent == NULL) {
 		parent = (Dirstruct*)malloc(sizeof(Dirstruct));
 		parent->pid = ppid;
+		parent->child=NULL;
+		parent->next=NULL;
 		insertChild(parent, head);
 		insertChild(current, parent);
 	}
@@ -69,7 +71,6 @@ Dirstruct* searchByPid(Dirstruct *current, int pid) {
 			if (temp == NULL) {
 				return NULL;
 			}
-			printf("%d\t",temp->pid);
 			temp_result = searchByPid(temp,pid);	
 		}
 		return temp_result;
@@ -127,13 +128,25 @@ void analysefile(char* dirname) {
 }
 void printList() {
 	assert((head->child)!=NULL);
-	printNode(head->child);
+	printNode(head->child,0);
 }
-void printNode(Dirstruct* node) {
-	printf("%d\t%s\n",node->pid,node->name);
+void printNode(Dirstruct* node, int level) {
+	int i;
+	for (i=0; i<level; i++) {
+		if ( i < level-1) {
+			printf("    │    ");
+		}
+		if ( i == level-1) {
+			if (hasNext(node))
+				printf("    ├────");
+			else 
+				printf("    └────");
+		}
+	}
+	printf("%d(%s)\n",node->pid,node->name);
 	if (hasChild(node)) 
-		printNode(node->child);
+		printNode(node->child,level+1);
 	if (hasNext(node))
-		printNode(node->next);
+		printNode(node->next,level);
 	return;
 }

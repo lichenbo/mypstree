@@ -15,7 +15,7 @@ struct dirstruct {
 Dirstruct *head;
 
 Dirstruct* searchByPid(Dirstruct *current, int pid);
-void printNode(Dirstruct* node);
+void printNode(Dirstruct* node, int level);
 int hasChild(Dirstruct* current);
 Dirstruct* getChild(Dirstruct* current);
 int hasNext(Dirstruct* current);
@@ -28,4 +28,4 @@ Dirstruct* searchByPid(Dirstruct* current, int pid);
 int filterdir(const struct dirent* dirstruct);
 void analysefile(char* dirname);
 void printList();
-void printNode(Dirstruct* node);
+void printNode(Dirstruct* node, int level);
